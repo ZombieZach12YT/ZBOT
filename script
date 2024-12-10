@@ -97,7 +97,7 @@ local Slider = Visual:CreateSlider({
    end,
 })
 
-local Button = Tab:CreateButton({
+local Button = Visual:CreateButton({
    Name = "Button Example",
    Callback = function()
       local Sense = loadstring(game:HttpGet('https://sirius.menu/sense'))()
