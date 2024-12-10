@@ -73,19 +73,45 @@ local Button = Scripts:CreateButton({
 local Games = Window:CreateTab("Games", 4483362458) -- Title, Image
 local Section = Games:CreateSection("Games")
 
-local Section = Games:CreateSection("Pet Go")
+local Section = Games:CreateSection("War Tycoon")
 
-local Toggle = Games:CreateToggle({
-   Name = "Auto Fish",
+local Toggle = Tab:CreateToggle({
+   Name = "Op Gun",
    CurrentValue = false,
-   Flag = "Auto Fish Pet Go",
+   Flag = "Op Gun", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
    Callback = function(Value)
-      if Value then
-         -- Start a loop that repeats when the toggle is on
-         while Toggle.CurrentValue do
-            game:GetService("ReplicatedStorage").Network.Fishing_Success:FireServer()
-            game:GetService("ReplicatedStorage").Network.Fishing_Fish:InvokeServer()
-            wait(1)  -- Adjust the delay as needed (e.g., 1 second)
+      local args = { 
+         [1] = game:GetService("Players").LocalPlayer.Character.M4A1, 
+         [2] = workspace.Tycoon.Tycoons.Echo.PurchasedObjects:FindFirstChild("Shooting Range").Target2.Hitmaker, 
+         [3] = Vector3.new(3097.051513671875, 67.68191528320312, -1695.3983154296875), 
+         [4] = { 
+            [1] = { 
+               [1] = Vector3.new(3085.31787109375, 68.11261749267578, -1692.830810546875), 
+               [2] = Vector3.new(0.9762578010559082, -0.03583516925573349, -0.2136271446943283), 
+               [3] = 3.421067953109741 
+            }, 
+            [2] = {} --[[DUPLICATE]] 
+         }, 
+         [5] = Vector3.new(-1, -9.380573260386882e-07, 2.605150370982301e-07), 
+         [6] = { 
+            ["Mode"] = "Auto", 
+            ["MaxSpread"] = 5, 
+            ["MaxRecoilPower"] = 0, 
+            ["Distance"] = 8000, 
+            ["BSpeed"] = 8000, 
+            ["FireRate"] = 99999 
+         }
+      }
+
+      -- You can modify how the args[4] is set based on what you're trying to target
+      -- Set args[4][2] as args[4][1]
+      args[4][2] = args[4][1]
+
+      -- Now send the FireServer call for all targets
+      for _, target in pairs(workspace:GetChildren()) do
+         if target:FindFirstChild("Bullgame") then
+            -- Send the BulletHit signal to each Bullgame target
+            game:GetService("ReplicatedStorage").BulletFireSystem.BulletHit:FireServer(unpack(args))
          end
       end
    end,
