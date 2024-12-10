@@ -101,5 +101,8 @@ local Info = Window:CreateTab("Info", 4483362458) -- Title, Image
 local Section = Info:CreateSection("Info")
 local Divider = Info:CreateDivider()
 local Paragraph = Info:CreateParagraph({Title = "ZBOT v1.0.0", Content = "Release and added the tabs Movement, Scripts, and Visual"})
+local Divider = Info:CreateDivider()
+local Paragraph = Info:CreateParagraph({Title = "ZBOT v1.0.1", Content = "Bug fixes and ui changes"})
+local Divider = Info:CreateDivider()
 
 Rayfield:LoadConfiguration()
