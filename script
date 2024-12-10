@@ -64,7 +64,7 @@ local Scripts = Window:CreateTab("Scripts", 4483362458) -- Title, Image
 local Section = Scripts:CreateSection("Scripts")
 
 local Button = Scripts:CreateButton({
-   Name = "Button Example",
+   Name = "Simple Spy (Mobile Support)",
    Callback = function()
    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Simple-Spy-Mobile-Script-Restored-22732"))()
    end,
