@@ -35,7 +35,6 @@ local Window = Rayfield:CreateWindow({
 
 local Movement = Window:CreateTab("Movement", 4483362458) -- Title, Image
 local Section = Movement:CreateSection("Movement")
-local Label = Movement:CreateLabel("Movement", 4483362458, Color3.fromRGB(255, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
 
 local Slider = Movement:CreateSlider({
    Name = "Walk Speed",
@@ -61,35 +60,24 @@ local Slider = Movement:CreateSlider({
    end,
 })
 
-local Toggle = Movement:CreateToggle({
-   Name = "Inf Jump",
-   CurrentValue = false,
-   Flag = "InfJump",
-   Callback = function(Value)
-       -- Check if the toggle is enabled
-       if Value then
-           -- Infinite Jump is enabled
-           -- Listen for the player's jump input and override gravity
-           game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
-               if gameProcessed then return end  -- Ignore if the input is processed by the game (like UI)
-               
-               if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.Space then
-                   local character = game.Players.LocalPlayer.Character
-                   if character and character:FindFirstChild("Humanoid") then
-                       local humanoid = character.Humanoid
-                       
-                       -- Ensure the player is in the air (not on the ground)
-                       if not humanoid:GetState() == Enum.HumanoidStateType.Physics or humanoid:GetState() == Enum.HumanoidStateType.Freefall then
-                           humanoid:ChangeState(Enum.HumanoidStateType.Physics)
-                           humanoid:Move(Vector3.new(0, 50, 0))  -- Apply upward force
-                       end
-                   end
-               end
-           end)
-       else
-           -- Disable Infinite Jump functionality when toggle is off
-           -- (You can remove the connections or set back to default behavior)
-       end
+local Button = Movement:CreateButton({
+   Name = "Infinite Jump",
+   Callback = function()
+  local InfiniteJumpEnabled = true
+game:GetService("UserInputService").JumpRequest:connect(function()
+	if InfiniteJumpEnabled then
+		game:GetService"Players".LocalPlayer.Character:FindFirstChildOfClass'Humanoid':ChangeState("Jumping")
+	end
+end)
+local InfiniteJump = CreateButton("Infinite Jump: On", StuffFrame)
+InfiniteJump.Position = UDim2.new(0,10,0,130)
+InfiniteJump.Size = UDim2.new(0,150,0,30)
+InfiniteJump.MouseButton1Click:connect(function()
+	local state = InfiniteJump.Text:sub(string.len("Infinite Jump: ") + 1) --too lazy to count lol
+	local new = state == "Off" and "On" or state == "On" and "Off"
+	InfiniteJumpEnabled = new == "On"
+	InfiniteJump.Text = "Infinite Jump: " .. new
+end)
    end,
 })
 
