@@ -111,13 +111,14 @@ local Button = Visual:CreateButton({
         if EspEnabled then
             -- Enable enemy ESP settings
             Sense.teamSettings.enemy.enabled = true
-            Sense.teamSettings.enemy.box3d = false
-            Sense.teamSettings.enemy.box = false
+            Sense.teamSettings.enemy.box3d = true  -- Remove the 3D box
+            Sense.teamSettings.enemy.box = false  -- Remove the 2D box
+            Sense.teamSettings.enemy.boxOutline = true  -- Enable the box outline
             Sense.teamSettings.enemy.healthBar = true
             Sense.teamSettings.enemy.name = true
             Sense.teamSettings.enemy.boxFill = false
             Sense.teamSettings.enemy.distance = true
-            Sense.teamSettings.enemy.chams = true
+            Sense.teamSettings.enemy.chams = true  -- Enable chams
         else
             -- Disable enemy ESP settings
             Sense.teamSettings.enemy.enabled = false
@@ -137,9 +138,10 @@ local ColorPicker = Visual:CreateColorPicker({
       -- Ensure Sense is loaded for the color change
       local Sense = loadstring(game:HttpGet('https://sirius.menu/sense'))()
 
-      -- Update the ESP color settings for both the box and chams
-      Sense.teamSettings.enemy.box3dColor = { Value, 1 }  -- Change the 3D box color
+      -- Update the ESP color settings for chams, box outline
+      Sense.teamSettings.enemy.boxOutlineColor = { Value, 1 }  -- Change the box outline color
       Sense.teamSettings.enemy.chamsColor = Value  -- Change the chams color
+      Sense.teamSettings.enemy.box3dColor = Value
 
       -- Apply the changes to Sense
       Sense.Load()
