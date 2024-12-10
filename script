@@ -23,7 +23,7 @@ local Window = Rayfield:CreateWindow({
 
    KeySystem = false, -- Set this to true to use our key system
    KeySettings = {
-      Title = "Untitled",
+      Title = "ZBOT",
       Subtitle = "Key System",
       Note = "No method of obtaining the key is provided", -- Use this to tell the user how to get a key
       FileName = "Key", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
@@ -35,6 +35,7 @@ local Window = Rayfield:CreateWindow({
 
 local Movement = Window:CreateTab("Movement", 4483362458) -- Title, Image
 local Section = Movement:CreateSection("Movement")
+local Label = Movement:CreateLabel("Movement", 4483362458, Color3.fromRGB(255, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
 
 local Slider = Movement:CreateSlider({
    Name = "Walk Speed",
@@ -63,7 +64,7 @@ local Slider = Movement:CreateSlider({
 local Toggle = Movement:CreateToggle({
    Name = "Inf Jump",
    CurrentValue = false,
-   Flag = "Inf Jump",
+   Flag = "InfJump",
    Callback = function(Value)
        -- Check if the toggle is enabled
        if Value then
