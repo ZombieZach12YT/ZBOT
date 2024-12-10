@@ -97,52 +97,41 @@ local Slider = Visual:CreateSlider({
    end,
 })
 
-local RunService = game:GetService("RunService")
-local UserInputService = game:GetService("UserInputService")
-
--- Create a label to show the FPS
-local fpsLabel = Instance.new("TextLabel")
-fpsLabel.Text = "FPS: 0"
-fpsLabel.Size = UDim2.new(0, 200, 0, 50)
-fpsLabel.Position = UDim2.new(0, 10, 0, 10)
-fpsLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-fpsLabel.BackgroundTransparency = 1
-fpsLabel.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("ScreenGui") -- Make sure this ScreenGui exists
-
--- FPS calculation variables
-local fps = 0
-local frameCount = 0
-local lastTime = tick()
-
--- Update the FPS counter
-local function updateFPS()
-    frameCount = frameCount + 1
-    local currentTime = tick()
-    if currentTime - lastTime >= 1 then
-        fps = frameCount
-        frameCount = 0
-        lastTime = currentTime
-    end
-    fpsLabel.Text = "FPS: " .. fps
-end
-
--- Toggle to control FPS display
 local Toggle = Visual:CreateToggle({
-    Name = "Toggle FPS Display",
-    CurrentValue = false,
-    Flag = "Toggle1", -- A flag is the identifier for the configuration file
-    Callback = function(Value)
-        if Value then
-            -- Enable FPS tracking
-            RunService.Heartbeat:Connect(updateFPS)
-        else
-            -- Disable FPS tracking
-            fpsLabel.Text = "FPS: 0" -- Reset the label text
-        end
-    end,
+   Name = "Esp",
+   CurrentValue = false,
+   Flag = "Esp",  -- A flag is the identifier for the configuration file.
+   Callback = function(Value)
+       local Sense = loadstring(game:HttpGet('https://sirius.menu/sense'))()
+
+       -- Enable enemy ESP settings
+       Sense.teamSettings.enemy.enabled = true
+
+       -- Outline the enemy boxes with a red color
+       Sense.teamSettings.enemy.boxOutline = true
+       Sense.teamSettings.enemy.boxOutlineColor = {Color3.new(1, 0, 0), 1} -- RGB red with full opacity
+
+       -- Disable filling the enemy box (just outline)
+       Sense.teamSettings.enemy.boxFill = false
+
+       -- Show health bar for enemies
+       Sense.teamSettings.enemy.healthBar = true
+
+       -- Enable weapon ESP for enemies
+       Sense.teamSettings.enemy.weapon = true
+
+       -- Set any other relevant properties here (if necessary, fill them in)
+       -- Example: 
+       -- Sense.teamSettings.enemy.name = true  -- Enable displaying enemy name
+
+       -- Load the settings into the ESP system
+       Sense.Load()
+   end,
 })
 
 local Info = Window:CreateTab("Info", 4483362458) -- Title, Image
+local Section = Info:CreateSection("Info")
+local Paragraph = Info:CreateParagraph({Title = "ZBOT v1.0.2", Content = "Bug fixes and ESP"})
 local Section = Info:CreateSection("Info")
 local Paragraph = Info:CreateParagraph({Title = "ZBOT v1.0.1", Content = "Bug fixes and ui changes"})
 local Divider = Info:CreateDivider()
