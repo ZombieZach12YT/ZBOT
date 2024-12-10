@@ -137,16 +137,26 @@ local function applySenseSettings()
         Sense.teamSettings.friendly.chams = true  -- Enable chams
 
         -- Apply team color to the box outline and chams for both friendly and enemy
-        local player = game.Players.LocalPlayer  -- Get the local player (you can adjust if needed)
-        
-        -- Set the ESP box color based on team
-        local teamColor = getTeamColor(player)
+        for _, player in pairs(game.Players:GetPlayers()) do
+            -- Skip the local player or any non-player character (NPC)
+            if player == game.Players.LocalPlayer then
+                continue
+            end
 
-        -- Apply team color to both friendly and enemy teams
-        Sense.teamSettings.enemy.boxOutlineColor = teamColor
-        Sense.teamSettings.enemy.chamsColor = teamColor
-        Sense.teamSettings.friendly.boxOutlineColor = teamColor
-        Sense.teamSettings.friendly.chamsColor = teamColor
+            -- Get the team color of the player
+            local teamColor = getTeamColor(player)
+
+            -- Apply team color to the ESP box outline and chams for enemy and friendly
+            if player.Team == game.Players.LocalPlayer.Team then
+                -- Friendly player ESP settings
+                Sense.teamSettings.friendly.boxOutlineColor = teamColor
+                Sense.teamSettings.friendly.chamsColor = teamColor
+            else
+                -- Enemy player ESP settings
+                Sense.teamSettings.enemy.boxOutlineColor = teamColor
+                Sense.teamSettings.enemy.chamsColor = teamColor
+            end
+        end
     else
         -- Disable enemy ESP settings
         Sense.teamSettings.enemy.enabled = false
@@ -155,7 +165,7 @@ local function applySenseSettings()
         Sense.teamSettings.friendly.enabled = false
     end
 
-    -- Apply the changes
+    -- Apply the changes and render the ESP
     Sense.Load()
 end
 
@@ -170,6 +180,17 @@ local Button = Visual:CreateButton({
         applySenseSettings()
     end,
 })
+
+-- Render ESP when toggled on
+local function renderESP()
+    if EspEnabled then
+        -- Ensure Sense is loaded and apply settings
+        applySenseSettings()
+    end
+end
+
+-- Call renderESP to initialize and apply ESP settings on toggle
+renderESP()
 
 local Info = Window:CreateTab("Info", 4483362458) -- Title, Image
 local Section = Info:CreateSection("Info")
