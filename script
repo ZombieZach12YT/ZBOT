@@ -60,6 +60,19 @@ local Slider = Movement:CreateSlider({
    end,
 })
 
+local Slider = Movement:CreateSlider({
+   Name = "Gravity",
+   Range = {0, 200},
+   Increment = 1,
+   Suffix = "Gravity",
+   CurrentValue = 196.2,  -- Roblox default gravity
+   Flag = "Gravity", 
+   Callback = function(Value)
+      workspace.Gravity = Value
+   end,
+})
+
+
 local Scripts = Window:CreateTab("Scripts", 4483362458) -- Title, Image
 local Section = Scripts:CreateSection("Scripts")
 
@@ -70,91 +83,18 @@ local Button = Scripts:CreateButton({
    end,
 })
 
-local Games = Window:CreateTab("Games", 4483362458) -- Title, Image
-local Section = Games:CreateSection("Games")
+local Visual = Window:CreateTab("Visual", 4483362458) -- Title, Image
+local Section = Visual:CreateSection("Visual")
 
-local Section = Games:CreateSection("War Tycoon")
-
-local Toggle = Games:CreateToggle({
-   Name = "Op Gun",
-   CurrentValue = false,
-   Flag = "Op Gun", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+local Slider = Visual:CreateSlider({
+   Name = "FOV",
+   Range = {70, 120},
+   Increment = 1,
+   Suffix = "Field of View",
+   CurrentValue = 70,
+   Flag = "FOV", 
    Callback = function(Value)
-      -- Define the overpowered gun arguments
-      local args = { 
-         [1] = game:GetService("Players").LocalPlayer.Character.M17, -- The player's gun
-         [2] = { 
-            -- Extremely overpowered gun settings
-            ["VPunchBase"] = 1000, -- Significantly higher punch base
-            ["BoltExtend"] = Vector3.new(0, 0, 100), -- Large bolt extension (increased power)
-            ["FocusOnSight"] = true, -- Always focus on sight
-            ["Chambered"] = true, -- Always chambered (ready to shoot)
-            ["Ammo"] = 99999, -- Unlimited ammo
-            ["FireRate"] = 10000, -- Extremely high fire rate (machine gun speed)
-            ["Tracer"] = true, -- Tracers for better visibility
-            ["Mode"] = "Auto", -- Full auto (rapid fire)
-            ["PunchRecover"] = 0.05, -- Very fast punch recovery (no downtime)
-            ["BurstFireRate"] = 5000, -- Ultra-fast burst fire rate
-            ["MinRecoilPower"] = 0, -- No recoil at all
-            ["ReloadType"] = 0, -- Instant reload
-            ["MaxRecoilPower"] = 0, -- No recoil at all
-            ["LeftPos"] = CFrame.new(0.8500000238418579, -0.15000000596046448, -1.5499999523162842) * CFrame.Angles(-2.094395160675049, 0.3490658402442932, -0.4363323450088501),
-            ["TracerColor"] = Color3.fromRGB(255, 0, 0), -- Red tracers for visual effect
-            ["BulletFlareColor"] = Color3.fromRGB(255, 255, 0), -- Bright bullet flare
-            ["ChangeFOV"] = { [1] = 60, [2] = 120 }, -- Increase FOV for better aiming
-            ["BDrop"] = 0, -- No bullet drop (hits instantly)
-            ["MinSpread"] = 0, -- Perfect accuracy (no spread)
-            ["BulletFlare"] = true, -- Bullet flare for extra visual effects
-            ["ChamberWhileAim"] = true, -- Chamber while aiming
-            ["IncludeChamberedBullet"] = true, -- Always include chambered bullets
-            ["HRecoil"] = { [1] = 0, [2] = 0 }, -- No horizontal recoil
-            ["ServerGunPos"] = CFrame.new(-0.30000001192092896, -1, -0.4000000059604645) * CFrame.Angles(-1.5707963705062866, 0, -0),
-            ["VRecoil"] = { [1] = 0, [2] = 0 }, -- No vertical recoil
-            ["AimRecover"] = 0.01, -- Instant aim recovery
-            ["LeftArmPos"] = CFrame.new(1.149999976158142, -0.10000000149011612, -1.649999976158142) * CFrame.Angles(-2.094395160675049, 0.3490658402442932, -0.4363323450088501),
-            ["RightArmPos"] = CFrame.new(-0.574999988079071, 0.6499999761581421, -1.184999942779541) * CFrame.Angles(-1.5707963705062866, 0, -0),
-            ["BurstShot"] = 999, -- Extremely large burst shot count (instant kills)
-            ["SlideExtend"] = Vector3.new(0, 0, 100), -- Max slide extension (extra power)
-            ["RecoilPowerStepAmount"] = 0, -- No recoil step
-            ["BoltLock"] = false, -- No bolt lock
-            ["RecoilPunch"] = 0, -- No recoil punch
-            ["GunFOVReduction"] = 0, -- No reduction in FOV
-            ["MaxSpread"] = 0, -- No spread (perfect accuracy)
-            ["SlideLock"] = false, -- No slide lock
-            ["GunType"] = 0, -- Gun type set to 0 for maximum power
-            ["AutoChamber"] = true, -- Auto chamber (always ready)
-            ["GunPos"] = CFrame.new(0.15000000596046448, -0.15000000596046448, 1) * CFrame.Angles(1.5707963705062866, 0, -0),
-            ["BSpeed"] = 5000, -- Extremely high bullet speed (hits instantly)
-            ["GunSize"] = 10, -- Increased gun size for dramatic effect
-            ["HPunchBase"] = 100, -- Overpowered punch base for insane recoil
-            ["FastReload"] = true, -- Instant reload
-            ["RightPos"] = CFrame.new(-0.4000000059604645, 0.6499999761581421, -1) * CFrame.Angles(-1.5707963705062866, 0, -0),
-            ["MoveBolt"] = false, -- No movement on bolt
-            ["FocusOnSight2"] = true, -- Always focus on sight (improved aiming)
-            ["Distance"] = 999999, -- Maximum distance (infinite range)
-            ["AimRecoilReduction"] = 100, -- Complete aim recoil reduction
-            ["SwayBase"] = 0, -- No sway
-            ["DamageMultiplier"] = 1000000, -- Overpowered damage (kills instantly)
-            ["WalkMultiplier"] = 0, -- No walk multiplier (no slowdown while walking)
-            ["AimInaccuracyStepAmount"] = 0, -- No aim inaccuracy
-            ["FireModes"] = { ["Burst"] = false, ["Semi"] = false, ["Auto"] = true, ["ChangeFiremode"] = false, ["Explosive"] = true }, -- Explosive bullets, auto fire mode
-            ["DPunchBase"] = 0, -- No punch
-            ["Bullets"] = 1000000 -- Unlimited bullets
-         }
-      }
-
-      -- Replace Equip event to use the extremely overpowered args
-      game:GetService("ReplicatedStorage").ACS_Engine.Events.Equip:FireServer(unpack(args))
-
-      -- Loop through the workspace to find targets with "Bullgame" (or similar)
-      for _, obj in pairs(workspace:GetChildren()) do
-         -- If the object has a child named "Bullgame", it is a valid target
-         if obj:FindFirstChild("Bullgame") then
-            -- Assuming you want to change the BulletHit events to a new behavior:
-            local bulletHitEvent = game:GetService("ReplicatedStorage").BulletFireSystem.BulletHit
-            bulletHitEvent:FireServer(unpack(args)) -- Fire the BulletHit event with current args
-         end
-      end
+      game:GetService("Workspace").CurrentCamera.FieldOfView = Value
    end,
 })
 
