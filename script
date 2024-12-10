@@ -97,26 +97,10 @@ local Slider = Visual:CreateSlider({
    end,
 })
 
--- Declare ESP state
-local EspEnabled = false
-
--- Function to load Sense and apply settings
-local function applySenseSettings()
-    -- Ensure Sense is loaded first
-    local Sense = loadstring(game:HttpGet('https://sirius.menu/sense'))()
-
-    -- Function to get the team color of a player
-    local function getTeamColor(player)
-        if player.Team then
-            return player.Team.Color
-        else
-            return Color3.fromRGB(255, 255, 255)  -- Default to white if no team color is available
-        end
-    end
-
-    -- Apply the ESP settings based on the toggle
-    if EspEnabled then
-        -- Enable enemy ESP settings
+local Button = Tab:CreateButton({
+   Name = "Button Example",
+   Callback = function()
+      local Sense = loadstring(game:HttpGet('https://sirius.menu/sense'))()
         Sense.teamSettings.enemy.enabled = true
         Sense.teamSettings.enemy.box = false  -- Remove the 2D box
         Sense.teamSettings.enemy.boxOutline = true  -- Enable the box outline
@@ -135,62 +119,9 @@ local function applySenseSettings()
         Sense.teamSettings.friendly.boxFill = false
         Sense.teamSettings.friendly.distance = true
         Sense.teamSettings.friendly.chams = true  -- Enable chams
-
-        -- Apply team color to the box outline and chams for both friendly and enemy
-        for _, player in pairs(game.Players:GetPlayers()) do
-            -- Skip the local player or any non-player character (NPC)
-            if player == game.Players.LocalPlayer then
-                continue
-            end
-
-            -- Get the team color of the player
-            local teamColor = getTeamColor(player)
-
-            -- Apply team color to the ESP box outline and chams for enemy and friendly
-            if player.Team == game.Players.LocalPlayer.Team then
-                -- Friendly player ESP settings
-                Sense.teamSettings.friendly.boxOutlineColor = teamColor
-                Sense.teamSettings.friendly.chamsColor = teamColor
-            else
-                -- Enemy player ESP settings
-                Sense.teamSettings.enemy.boxOutlineColor = teamColor
-                Sense.teamSettings.enemy.chamsColor = teamColor
-            end
-        end
-    else
-        -- Disable enemy ESP settings
-        Sense.teamSettings.enemy.enabled = false
-        
-        -- Disable friendly ESP settings
-        Sense.teamSettings.friendly.enabled = false
-    end
-
-    -- Apply the changes and render the ESP
-    Sense.Load()
-end
-
--- Create the Toggle ESP button
-local Button = Visual:CreateButton({
-    Name = "Toggle ESP",  -- The button's label
-    Callback = function()
-        -- Toggle the ESP state
-        EspEnabled = not EspEnabled  -- Toggle the value
-
-        -- Apply the changes immediately after toggling
-        applySenseSettings()
-    end,
+        Sense.Load()
+   end,
 })
-
--- Render ESP when toggled on
-local function renderESP()
-    if EspEnabled then
-        -- Ensure Sense is loaded and apply settings
-        applySenseSettings()
-    end
-end
-
--- Call renderESP to initialize and apply ESP settings on toggle
-renderESP()
 
 local Info = Window:CreateTab("Info", 4483362458) -- Title, Image
 local Section = Info:CreateSection("Info")
