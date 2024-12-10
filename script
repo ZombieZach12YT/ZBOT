@@ -12,7 +12,7 @@ local Window = Rayfield:CreateWindow({
    ConfigurationSaving = {
       Enabled = true,
       FolderName = nil, -- Create a custom folder for your hub/game
-      FileName = "ZBOT Hub"
+      FileName = "ZBOT"
    },
 
    Discord = {
@@ -44,10 +44,8 @@ local Slider = Movement:CreateSlider({
    CurrentValue = 16,
    Flag = "WalkSpeed", 
    Callback = function(Value)
-      -- Change the player's walk speed
       game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
    end,
 })
-
 
 Rayfield:LoadConfiguration()
