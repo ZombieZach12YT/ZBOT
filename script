@@ -1,43 +1,97 @@
-function love.load()
-    -- Set up the window
-    love.window.setTitle("Custom Clean GUI")
-    love.window.setMode(800, 600)
+--ArrayField--
+local ArrayField = loadstring(game:HttpGet('https://raw.githubusercontent.com/UI-Interface/ArrayField/main/Source.lua'))()
 
-    -- Button properties
-    button = {
-        x = 350,
-        y = 250,
-        width = 100,
-        height = 50,
-        label = "Click Me",
-        isHovered = false
+local Window = ArrayField:CreateWindow({
+    Name = "ZBOT",
+    LoadingTitle = "ZBOT",
+    LoadingSubtitle = "by ZombieZach12",
+    ConfigurationSaving = {
+       Enabled = true,
+       FolderName = nil, -- Create a custom folder for your hub/game
+       FileName = "ZBOT.Ar"
+    },
+    Discord = {
+       Enabled = false,
+       Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ABCD would be ABCD
+       RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+    },
+    KeySystem = false, -- Set this to true to use our key system
+    KeySettings = {
+       Title = "Untitled",
+       Subtitle = "Key System",
+       Note = "No method of obtaining the key is provided",
+       FileName = "Key", -- It is recommended to use something unique as other scripts using ArrayField may overwrite your key file
+       SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+       GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like ArrayField to get the key from
+       Actions = {
+             [1] = {
+                 Text = 'Click here to copy the key link <--',
+                 OnPress = function()
+                     print('Pressed')
+                 end,
+                 }
+             },
+       Key = {"Hello"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
     }
-end
+ })
 
-function love.update(dt)
-    -- Check mouse position
-    local mouseX, mouseY = love.mouse.getPosition()
-    button.isHovered = mouseX > button.x and mouseX < button.x + button.width and
-                       mouseY > button.y and mouseY < button.y + button.height
-end
+local Movement = Window:CreateTab("Movement", 4483362458) -- Title, Image
+local Section = Movement:CreateSection("Movement",false) -- The 2nd argument is to tell if its only a Title and doesnt contain element
+Movement:CreateSpacing(nil,10)
+local Button = Tab:CreateButton({
+    Name = "Button Example",
+    Interact = 'Click',
+    Callback = function()
+    -- The function that takes place when the button is pressed
+    end,
+ })
 
-function love.draw()
-    -- Draw the button
-    if button.isHovered then
-        love.graphics.setColor(0.7, 0.7, 0.7) -- Light grey when hovered
-    else
-        love.graphics.setColor(0.5, 0.5, 0.5) -- Dark grey otherwise
-    end
+local Slider = Movement:CreateSlider({
+   Name = "Walk Speed",
+   Range = {16, 500},
+   Increment = 1,
+   Suffix = "Walk Speed",
+   CurrentValue = 16,
+   Flag = "WalkSpeed",  -- A unique identifier for the configuration
+   Callback = function(Value)
+       -- Adjust the walk speed based on the slider value
+       local character = game.Players.LocalPlayer.Character
+       if character and character:FindFirstChild("Humanoid") then
+           local humanoid = character.Humanoid
+           
+           -- Set the walk speed to the value of the slider
+           humanoid.WalkSpeed = Value
+       end
+   end,
+})
 
-    love.graphics.rectangle("fill", button.x, button.y, button.width, button.height)
+local Slider = Movement:CreateSlider({
+   Name = "Jump Power",
+   Range = {50, 500},  -- You can adjust the range to fit your desired jump power range
+   Increment = 1,
+   Suffix = "Jump Power",
+   CurrentValue = 50,  -- Initial value (can be adjusted)
+   Flag = "JumpPower",  -- A unique identifier for the configuration
+   Callback = function(Value)
+       -- Adjust the jump power based on the slider value
+       local character = game.Players.LocalPlayer.Character
+       if character and character:FindFirstChild("Humanoid") then
+           local humanoid = character.Humanoid
+           
+           -- Set the jump power to the value of the slider
+           humanoid.JumpPower = Value
+       end
+   end,
+})
 
-    -- Draw the button label
-    love.graphics.setColor(0, 0, 0) -- Black text
-    love.graphics.printf(button.label, button.x, button.y + button.height / 4, button.width, "center")
-end
+local Games = Window:CreateTab("Games", 4483362458) -- Title, Image
 
-function love.mousepressed(x, y, button, istouch, presses)
-    if button == 1 and button.isHovered then -- Left mouse button
-        print("Button clicked!")
-    end
-end
+local Scripts = Window:CreateTab("Scripts", 4483362458) -- Title, Image
+
+local Button = Scripts:CreateButton({
+   Name = "Simple Spy (Mobile Support)",
+   Interact = 'Run',
+   Callback = function()
+   loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Simple-Spy-Mobile-Script-Restored-22732"))()
+   end,
+})
