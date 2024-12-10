@@ -70,4 +70,25 @@ local Button = Scripts:CreateButton({
    end,
 })
 
+local Games = Window:CreateTab("Games", 4483362458) -- Title, Image
+local Section = Games:CreateSection("Games")
+
+local Section = Games:CreateSection("Pet Go")
+
+local Toggle = Games:CreateToggle({
+   Name = "Auto Fish",
+   CurrentValue = false,
+   Flag = "Auto Fish Pet Go",
+   Callback = function(Value)
+      if Value then
+         -- Start a loop that repeats when the toggle is on
+         while Toggle.CurrentValue do
+            game:GetService("ReplicatedStorage").Network.Fishing_Success:FireServer()
+            game:GetService("ReplicatedStorage").Network.Fishing_Fish:InvokeServer()
+            wait(1)  -- Adjust the delay as needed (e.g., 1 second)
+         end
+      end
+   end,
+})
+
 Rayfield:LoadConfiguration()
