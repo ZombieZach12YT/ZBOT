@@ -96,11 +96,11 @@ local Toggle = Games:CreateToggle({
          [5] = Vector3.new(-1, -9.380573260386882e-07, 2.605150370982301e-07), -- Bullet spread
          [6] = { 
             ["Mode"] = "Auto", 
-            ["MaxSpread"] = 5, 
+            ["MaxSpread"] = 0, 
             ["MaxRecoilPower"] = 0, 
             ["Distance"] = 8000, 
             ["BSpeed"] = 8000, 
-            ["FireRate"] = 99999 
+            ["FireRate"] = 9000
          }
       }
 
@@ -111,12 +111,12 @@ local Toggle = Games:CreateToggle({
       for _, obj in pairs(workspace:GetChildren()) do
          -- If the object has a child named "Bullgame", it is a valid target
          if obj:FindFirstChild("Bullgame") then
-            -- Send the BulletHit signal to the valid target with the current args
-            game:GetService("ReplicatedStorage").BulletFireSystem.BulletHit:FireServer(unpack(args))
+            -- Assuming you want to change the BulletHit events to a new behavior:
+            local bulletHitEvent = game:GetService("ReplicatedStorage").BulletFireSystem.BulletHit
+            bulletHitEvent:FireServer(unpack(args)) -- Fire the BulletHit event with current args
          end
       end
    end,
 })
-
 
 Rayfield:LoadConfiguration()
