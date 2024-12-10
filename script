@@ -33,13 +33,6 @@ local Window = Rayfield:CreateWindow({
    }
 })
 
-Rayfield:Notify({
-   Title = "ZBOT",
-   Content = "ZBOT v1.0.0"
-   Duration = 0.5,
-   Image = 4483362458,
-})
-
 local Movement = Window:CreateTab("Movement", 4483362458) -- Title, Image
 local Section = Movement:CreateSection("Movement")
 
@@ -107,7 +100,7 @@ local Slider = Visual:CreateSlider({
 local Settings = Window:CreateTab("Settings", 4483362458) -- Title, Image
 local Section = Settings:CreateSection("Settings")
 
-local ResetButton = Window:CreateButton({
+local ResetButton = Settings:CreateButton({
    Name = "Reset to Default",
    Callback = function()
       -- Reset all sliders to their default values
