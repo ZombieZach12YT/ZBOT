@@ -97,6 +97,72 @@ local Slider = Visual:CreateSlider({
    end,
 })
 
+-- Create the FPS display frame
+local fpsFrame = Instance.new("Frame")
+fpsFrame.Size = UDim2.new(0, 200, 0, 50)
+fpsFrame.Position = UDim2.new(0, 10, 0, 10)
+fpsFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+fpsFrame.BackgroundTransparency = 0.5
+fpsFrame.Visible = false  -- Initially hidden
+fpsFrame.Parent = game.Players.LocalPlayer.PlayerGui
+
+-- Create the FPS label inside the frame
+local fpsLabel = Instance.new("TextLabel")
+fpsLabel.Size = UDim2.new(1, 0, 1, 0)
+fpsLabel.BackgroundTransparency = 1
+fpsLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+fpsLabel.TextScaled = true
+fpsLabel.Text = "FPS: 0"
+fpsLabel.Parent = fpsFrame
+
+-- Function to update FPS dynamically
+local function updateFPS()
+    while true do
+        -- Update FPS every second
+        local fps = math.floor(1 / game:GetService("RunService").Heartbeat:Wait())
+        fpsLabel.Text = "FPS: " .. tostring(fps)
+    end
+end
+
+-- Start updating FPS
+spawn(updateFPS)
+
+-- Create the toggle to show/hide FPS display
+local Toggle = Visual:CreateToggle({
+    Name = "Toggle FPS Display",  -- The name of the toggle button
+    CurrentValue = false,         -- The initial state of the toggle (false = hidden)
+    Flag = "ToggleFPS",           -- The flag identifier for configuration saving
+    Callback = function(Value)    -- This function runs when the toggle state changes
+        fpsFrame.Visible = Value -- Toggle the visibility of the FPS frame
+    end,
+})
+
+-- Make the FPS frame draggable
+local dragging = false
+local dragInput, dragStart, startPos
+
+fpsFrame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = fpsFrame.Position
+    end
+end)
+
+fpsFrame.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = false
+    end
+end)
+
+game:GetService("UserInputService").InputChanged:Connect(function(input)
+    if dragging then
+        local delta = input.Position - dragStart
+        fpsFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+end)
+
+
 local Info = Window:CreateTab("Info", 4483362458) -- Title, Image
 local Section = Info:CreateSection("Info")
 local Divider = Info:CreateDivider()
