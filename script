@@ -36,7 +36,7 @@ local Window = Rayfield:CreateWindow({
 local Movement = Window:CreateTab("Movement", 4483362458) -- Title, Image
 local Section = Movement:CreateSection("Movement")
 
-local Slider = Tab:CreateSlider({
+local Slider = Movement:CreateSlider({
    Name = "Walk Speed",
    Range = {16, 500},
    Increment = 1,
