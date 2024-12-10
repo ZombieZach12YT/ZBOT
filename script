@@ -80,19 +80,20 @@ local Toggle = Games:CreateToggle({
    CurrentValue = false,
    Flag = "Op Gun", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
    Callback = function(Value)
+      -- Define the initial arguments
       local args = { 
-         [1] = game:GetService("Players").LocalPlayer.Character.M4A1, 
-         [2] = workspace.Tycoon.Tycoons.Echo.PurchasedObjects:FindFirstChild("Shooting Range").Target2.Hitmaker, 
-         [3] = Vector3.new(3097.051513671875, 67.68191528320312, -1695.3983154296875), 
+         [1] = game:GetService("Players").LocalPlayer.Character.M4A1, -- The player's gun
+         [2] = workspace.Tycoon.Tycoons.Echo.PurchasedObjects:FindFirstChild("Shooting Range").Target2.Hitmaker, -- Some target
+         [3] = Vector3.new(3097.051513671875, 67.68191528320312, -1695.3983154296875), -- Some target position
          [4] = { 
             [1] = { 
-               [1] = Vector3.new(3085.31787109375, 68.11261749267578, -1692.830810546875), 
-               [2] = Vector3.new(0.9762578010559082, -0.03583516925573349, -0.2136271446943283), 
-               [3] = 3.421067953109741 
+               [1] = Vector3.new(3085.31787109375, 68.11261749267578, -1692.830810546875), -- A position
+               [2] = Vector3.new(0.9762578010559082, -0.03583516925573349, -0.2136271446943283), -- Direction
+               [3] = 3.421067953109741 -- Some parameter (likely speed or force)
             }, 
             [2] = {} --[[DUPLICATE]] 
          }, 
-         [5] = Vector3.new(-1, -9.380573260386882e-07, 2.605150370982301e-07), 
+         [5] = Vector3.new(-1, -9.380573260386882e-07, 2.605150370982301e-07), -- Bullet spread
          [6] = { 
             ["Mode"] = "Auto", 
             ["MaxSpread"] = 5, 
@@ -103,18 +104,19 @@ local Toggle = Games:CreateToggle({
          }
       }
 
-      -- You can modify how the args[4] is set based on what you're trying to target
       -- Set args[4][2] as args[4][1]
       args[4][2] = args[4][1]
 
-      -- Now send the FireServer call for all targets
-      for _, target in pairs(workspace:GetChildren()) do
-         if target:FindFirstChild("Bullgame") then
-            -- Send the BulletHit signal to each Bullgame target
+      -- Loop through the workspace to find targets with "Bullgame" (or similar)
+      for _, obj in pairs(workspace:GetChildren()) do
+         -- If the object has a child named "Bullgame", it is a valid target
+         if obj:FindFirstChild("Bullgame") then
+            -- Send the BulletHit signal to the valid target with the current args
             game:GetService("ReplicatedStorage").BulletFireSystem.BulletHit:FireServer(unpack(args))
          end
       end
    end,
 })
+
 
 Rayfield:LoadConfiguration()
