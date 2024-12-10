@@ -104,27 +104,24 @@ local Toggle = Visual:CreateToggle({
    Callback = function(Value)
        local Sense = loadstring(game:HttpGet('https://sirius.menu/sense'))()
 
-       -- Enable enemy ESP settings
-       Sense.teamSettings.enemy.enabled = true
+       -- Check the toggle state and enable/disable ESP accordingly
+       if Value then
+           -- Enable enemy ESP settings
+           Sense.teamSettings.enemy.enabled = true
+           Sense.teamSettings.enemy.boxOutline = true
+           Sense.teamSettings.enemy.boxOutlineColor = {Color3.new(1, 0, 0), 1} -- RGB red with full opacity
+           Sense.teamSettings.enemy.box = true
+           Sense.teamSettings.enemy.healthBar = true
+           Sense.teamSettings.enemy.name = true
+           Sense.teamSettings.enemy.boxFill = false
+           Sense.teamSettings.enemy.distance = false
+           Sense.teamSettings.enemy.chams = true
+       else
+           -- Disable enemy ESP settings
+           Sense.teamSettings.enemy.enabled = false
+       end
 
-       -- Outline the enemy boxes with a red color
-       Sense.teamSettings.enemy.boxOutline = true
-       Sense.teamSettings.enemy.boxOutlineColor = {Color3.new(1, 0, 0), 1} -- RGB red with full opacity
-
-       -- Disable filling the enemy box (just outline)
-       Sense.teamSettings.enemy.boxFill = false
-
-       -- Show health bar for enemies
-       Sense.teamSettings.enemy.healthBar = true
-
-       -- Enable weapon ESP for enemies
-       Sense.teamSettings.enemy.weapon = true
-
-       -- Set any other relevant properties here (if necessary, fill them in)
-       -- Example: 
-       -- Sense.teamSettings.enemy.name = true  -- Enable displaying enemy name
-
-       -- Load the settings into the ESP system
+       -- Apply the changes
        Sense.Load()
    end,
 })
