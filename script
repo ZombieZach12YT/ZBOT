@@ -33,6 +33,13 @@ local Window = Rayfield:CreateWindow({
    }
 })
 
+Rayfield:Notify({
+   Title = "ZBOT",
+   Content = "ZBOT v1.0.0"
+   Duration = 0.5,
+   Image = 4483362458,
+})
+
 local Movement = Window:CreateTab("Movement", 4483362458) -- Title, Image
 local Section = Movement:CreateSection("Movement")
 
