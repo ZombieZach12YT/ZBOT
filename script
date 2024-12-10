@@ -72,7 +72,6 @@ local Slider = Movement:CreateSlider({
    end,
 })
 
-
 local Scripts = Window:CreateTab("Scripts", 4483362458) -- Title, Image
 local Section = Scripts:CreateSection("Scripts")
 
@@ -88,13 +87,34 @@ local Section = Visual:CreateSection("Visual")
 
 local Slider = Visual:CreateSlider({
    Name = "FOV",
-   Range = {70, 120},
+   Range = {70, 500},
    Increment = 1,
    Suffix = "Field of View",
    CurrentValue = 70,
    Flag = "FOV", 
    Callback = function(Value)
       game:GetService("Workspace").CurrentCamera.FieldOfView = Value
+   end,
+})
+
+local Settings = Window:CreateTab("Settings", 4483362458) -- Title, Image
+local Section = Settings:CreateSection("Settings")
+
+local ResetButton = Window:CreateButton({
+   Name = "Reset to Default",
+   Callback = function()
+      -- Reset all sliders to their default values
+      game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
+      game.Players.LocalPlayer.Character.Humanoid.JumpPower = 50
+      workspace.Gravity = 196.2
+      game:GetService("Workspace").CurrentCamera.FieldOfView = 70
+
+      -- Optionally, you can update the sliders in Rayfield to show these values again.
+      -- This part ensures that the sliders visually match the default values
+      Slider:UpdateSliderValue(16)
+      Slider:UpdateSliderValue(50)
+      Slider:UpdateSliderValue(196.2)
+      Slider:UpdateSliderValue(70)
    end,
 })
 
