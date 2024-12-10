@@ -48,4 +48,48 @@ local Slider = Movement:CreateSlider({
    end,
 })
 
+local Slider = Movement:CreateSlider({
+   Name = "Jump Power",
+   Range = {50, 200},  -- You can adjust the range as per your preference
+   Increment = 1,
+   Suffix = "Jump Power",
+   CurrentValue = 50,
+   Flag = "JumpPower", 
+   Callback = function(Value)
+      game.Players.LocalPlayer.Character.Humanoid.JumpPower = Value
+   end,
+})
+
+local Toggle = Movement:CreateToggle({
+   Name = "Inf Jump",
+   CurrentValue = false,
+   Flag = "Inf Jump",
+   Callback = function(Value)
+       -- Check if the toggle is enabled
+       if Value then
+           -- Infinite Jump is enabled
+           -- Listen for the player's jump input and override gravity
+           game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
+               if gameProcessed then return end  -- Ignore if the input is processed by the game (like UI)
+               
+               if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.Space then
+                   local character = game.Players.LocalPlayer.Character
+                   if character and character:FindFirstChild("Humanoid") then
+                       local humanoid = character.Humanoid
+                       
+                       -- Ensure the player is in the air (not on the ground)
+                       if not humanoid:GetState() == Enum.HumanoidStateType.Physics or humanoid:GetState() == Enum.HumanoidStateType.Freefall then
+                           humanoid:ChangeState(Enum.HumanoidStateType.Physics)
+                           humanoid:Move(Vector3.new(0, 50, 0))  -- Apply upward force
+                       end
+                   end
+               end
+           end)
+       else
+           -- Disable Infinite Jump functionality when toggle is off
+           -- (You can remove the connections or set back to default behavior)
+       end
+   end,
+})
+
 Rayfield:LoadConfiguration()
