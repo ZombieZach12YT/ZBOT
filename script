@@ -97,6 +97,16 @@ local Slider = Visual:CreateSlider({
    end,
 })
 
+local Toggle = Visual:CreateToggle({
+   Name = "Name Esp",
+   CurrentValue = false,
+   Flag = "Name", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Value)
+      Sense.teamSettings.enemy.name = Value  -- Use the 'Value' passed to the callback
+      Sense.teamSettings.friendly.name = Value  -- Use the 'Value' passed to the callback
+   end,
+})
+
 local Button = Visual:CreateButton({
    Name = "Enemy Esp",
    Callback = function()
@@ -106,10 +116,10 @@ local Button = Visual:CreateButton({
       Sense.teamSettings.enemy.box = false  -- Remove the 2D box
       Sense.teamSettings.enemy.boxOutline = true  -- Enable the box outline
       Sense.teamSettings.enemy.healthBar = true
-      Sense.teamSettings.enemy.name = true
+      Sense.teamSettings.enemy.name = false
       Sense.teamSettings.enemy.boxFill = false
       Sense.teamSettings.enemy.distance = false
-      Sense.teamSettings.enemy.chams = false  -- Enable chams
+      Sense.teamSettings.enemy.chams = true  -- Enable chams
 
       Sense.Load()
    end,
@@ -127,7 +137,7 @@ local Button = Visual:CreateButton({
       Sense.teamSettings.friendly.name = true
       Sense.teamSettings.friendly.boxFill = false
       Sense.teamSettings.friendly.distance = false
-      Sense.teamSettings.friendly.chams = false  -- Enable chams
+      Sense.teamSettings.friendly.chams = true  -- Enable chams
       
       Sense.Load()
    end,
