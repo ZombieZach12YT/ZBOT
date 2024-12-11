@@ -98,28 +98,38 @@ local Slider = Visual:CreateSlider({
 })
 
 local Button = Visual:CreateButton({
-   Name = "Button Example",
+   Name = "Enemy Esp",
    Callback = function()
       local Sense = loadstring(game:HttpGet('https://sirius.menu/sense'))()
-        Sense.teamSettings.enemy.enabled = true
-        Sense.teamSettings.enemy.box = false  -- Remove the 2D box
-        Sense.teamSettings.enemy.boxOutline = true  -- Enable the box outline
-        Sense.teamSettings.enemy.healthBar = true
-        Sense.teamSettings.enemy.name = true
-        Sense.teamSettings.enemy.boxFill = false
-        Sense.teamSettings.enemy.distance = true
-        Sense.teamSettings.enemy.chams = true  -- Enable chams
-        
-        -- Enable friendly ESP settings
-        Sense.teamSettings.friendly.enabled = true
-        Sense.teamSettings.friendly.box = false  -- Remove the 2D box
-        Sense.teamSettings.friendly.boxOutline = true  -- Enable the box outline
-        Sense.teamSettings.friendly.healthBar = true
-        Sense.teamSettings.friendly.name = true
-        Sense.teamSettings.friendly.boxFill = false
-        Sense.teamSettings.friendly.distance = true
-        Sense.teamSettings.friendly.chams = true  -- Enable chams
-        Sense.Load()
+
+      Sense.teamSettings.enemy.enabled = true
+      Sense.teamSettings.enemy.box = false  -- Remove the 2D box
+      Sense.teamSettings.enemy.boxOutline = true  -- Enable the box outline
+      Sense.teamSettings.enemy.healthBar = true
+      Sense.teamSettings.enemy.name = true
+      Sense.teamSettings.enemy.boxFill = false
+      Sense.teamSettings.enemy.distance = true
+      Sense.teamSettings.enemy.chams = true  -- Enable chams
+
+      Sense.Load()
+   end,
+})
+
+local Button = Visual:CreateButton({
+   Name = "Friendly Esp",
+   Callback = function()
+      local Sense = loadstring(game:HttpGet('https://sirius.menu/sense'))()
+
+      Sense.teamSettings.friendly.enabled = true
+      Sense.teamSettings.friendly.box = false  -- Remove the 2D box
+      Sense.teamSettings.friendly.boxOutline = true  -- Enable the box outline
+      Sense.teamSettings.friendly.healthBar = true
+      Sense.teamSettings.friendly.name = true
+      Sense.teamSettings.friendly.boxFill = false
+      Sense.teamSettings.friendly.distance = true
+      Sense.teamSettings.friendly.chams = true  -- Enable chams
+      
+      Sense.Load()
    end,
 })
 
