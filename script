@@ -108,8 +108,8 @@ local Button = Visual:CreateButton({
       Sense.teamSettings.enemy.healthBar = true
       Sense.teamSettings.enemy.name = true
       Sense.teamSettings.enemy.boxFill = false
-      Sense.teamSettings.enemy.distance = true
-      Sense.teamSettings.enemy.chams = true  -- Enable chams
+      Sense.teamSettings.enemy.distance = false
+      Sense.teamSettings.enemy.chams = false  -- Enable chams
 
       Sense.Load()
    end,
@@ -126,22 +126,10 @@ local Button = Visual:CreateButton({
       Sense.teamSettings.friendly.healthBar = true
       Sense.teamSettings.friendly.name = true
       Sense.teamSettings.friendly.boxFill = false
-      Sense.teamSettings.friendly.distance = true
-      Sense.teamSettings.friendly.chams = true  -- Enable chams
+      Sense.teamSettings.friendly.distance = false
+      Sense.teamSettings.friendly.chams = false  -- Enable chams
       
       Sense.Load()
-   end,
-})
-
-local Toggle = Visual:CreateToggle({
-   Name = "Distance Toggle",
-   CurrentValue = false,
-   Flag = "Distance", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-   Callback = function(Value)
-   Sense.teamSettings.enemy.distance = Value
-   Sense.teamSettings.friendly.distance = Value
-
-   Sense.Load()
    end,
 })
 
