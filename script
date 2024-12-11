@@ -87,7 +87,7 @@ local Section = Visual:CreateSection("Visual")
 
 local Slider = Visual:CreateSlider({
    Name = "FOV",
-   Range = {70, 500},
+   Range = {70, 90000},
    Increment = 1,
    Suffix = "Field of View",
    CurrentValue = 70,
