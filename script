@@ -74,49 +74,117 @@ createSlider(Movement, "Gravity", {0, 200}, 1, "Gravity", 196.2, "Gravity", func
    workspace.Gravity = Value
 end)
 
--- Scripts Tab
-local Scripts = Window:CreateTab("Scripts", 4483362458)
-local Section = Scripts:CreateSection("Scripts")
+-- Fly Mode Toggle
+local flying = false
+local flySpeed = 100
+createButton(Movement, "Toggle Fly", function()
+   flying = not flying
+   local character = game.Players.LocalPlayer.Character
+   if character and character:FindFirstChild("HumanoidRootPart") then
+      if flying then
+         local bodyVelocity = Instance.new("BodyVelocity")
+         bodyVelocity.MaxForce = Vector3.new(100000, 100000, 100000)
+         bodyVelocity.Velocity = Vector3.new(0, flySpeed, 0)
+         bodyVelocity.Parent = character.HumanoidRootPart
+      else
+         -- Remove fly when toggled off
+         if character.HumanoidRootPart:FindFirstChildOfClass("BodyVelocity") then
+            character.HumanoidRootPart:FindFirstChildOfClass("BodyVelocity"):Destroy()
+         end
+      end
+   end
+end)
 
--- Simple Spy Button
-createButton(Scripts, "Simple Spy (Mobile Support)", function()
-   loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Simple-Spy-Mobile-Script-Restored-22732"))()
+-- No Clip Toggle (Fly through walls)
+local noClip = false
+createButton(Movement, "Toggle No Clip", function()
+   noClip = not noClip
+   local character = game.Players.LocalPlayer.Character
+   if character then
+      for _, part in pairs(character:GetDescendants()) do
+         if part:IsA("BasePart") then
+            part.CanCollide = not noClip
+         end
+      end
+   end
+end)
+
+-- Speed Boost Toggle
+local speedBoost = false
+createButton(Movement, "Toggle Speed Boost", function()
+   speedBoost = not speedBoost
+   local humanoid = getHumanoid()
+   if humanoid then
+      if speedBoost then
+         humanoid.WalkSpeed = 100
+      else
+         humanoid.WalkSpeed = 16
+      end
+   end
 end)
 
 -- Visual Tab
 local Visual = Window:CreateTab("Visual", 4483362458)
 local Section = Visual:CreateSection("Visual")
 
--- FOV Slider
+-- FOV Slider with presets
 createSlider(Visual, "FOV", {70, 500}, 1, "Field of View", 70, "FOV", function(Value)
    game:GetService("Workspace").CurrentCamera.FieldOfView = Value
 end)
 
 -- ESP Settings (Shared Function for Enemy and Friendly ESP)
-local function configureESP(isEnemy)
+local function configureESP(isEnemy, color)
    local Sense = loadstring(game:HttpGet('https://sirius.menu/sense'))()
    
    local target = isEnemy and Sense.teamSettings.enemy or Sense.teamSettings.friendly
    target.enabled = true
-   target.box = false
+   target.box = true
    target.boxOutline = true
+   target.boxFill = false
    target.healthBar = true
    target.name = true
-   target.boxFill = false
    target.distance = true
    target.chams = true
+   target.boxColor = color -- Customize box color dynamically
 
    Sense.Load()
 end
 
--- Enemy ESP Button
+-- Enemy ESP Button with color picker
 createButton(Visual, "Enemy ESP", function()
-   configureESP(true)
+   local color = Color3.fromRGB(255, 0, 0) -- Red color for enemy ESP
+   configureESP(true, color)
 end)
 
--- Friendly ESP Button
+-- Friendly ESP Button with color picker
 createButton(Visual, "Friendly ESP", function()
-   configureESP(false)
+   local color = Color3.fromRGB(0, 255, 0) -- Green color for friendly ESP
+   configureESP(false, color)
+end)
+
+-- Wallhack/Chams Button
+createButton(Visual, "Enable Wallhack", function()
+   local Sense = loadstring(game:HttpGet('https://sirius.menu/sense'))()
+   Sense.visuals.wallhack = true -- Enable wallhack (chams)
+   Sense.Load()
+end)
+
+-- Scripts Tab
+local Scripts = Window:CreateTab("Scripts", 4483362458)
+local Section = Scripts:CreateSection("Scripts")
+
+-- Infinite Yield Script
+createButton(Scripts, "Infinite Yield", function()
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+end)
+
+-- Teleport to Player Button
+createButton(Scripts, "Teleport to Player", function()
+   local playerName = game.Players.LocalPlayer.Name
+   local targetPlayer = game.Players:FindFirstChild(playerName) -- Get the player you want to teleport to
+   if targetPlayer then
+      game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame
+   end
 end)
 
 -- Info Tab
@@ -124,6 +192,7 @@ local Info = Window:CreateTab("Info", 4483362458)
 local Section = Info:CreateSection("Info")
 
 -- Version Information
+Info:CreateParagraph({Title = "ZBOT v1.1.0", Content = "Added Fly Mode, No Clip, Speed Boost, Wallhack/Chams, and more."})
 Info:CreateParagraph({Title = "ZBOT v1.0.2", Content = "Bug fixes and ESP improvements"})
 Info:CreateParagraph({Title = "ZBOT v1.0.1", Content = "Bug fixes and UI changes"})
 Info:CreateParagraph({Title = "ZBOT v1.0.0", Content = "Initial release with Movement, Scripts, and Visual tabs"})
