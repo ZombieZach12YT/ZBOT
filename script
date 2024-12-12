@@ -1,154 +1,133 @@
+-- Load Rayfield UI Library
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+-- Create Window with general settings
 local Window = Rayfield:CreateWindow({
    Name = "ZBOT",
-   Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
+   Icon = 0, -- No icon in topbar
    LoadingTitle = "ZBOT",
    LoadingSubtitle = "by ZombieZach12",
-   Theme = "Default", -- Check https://docs.sirius.menu/rayfield/configuration/themes
-
+   Theme = "Default",
    DisableRayfieldPrompts = true,
-   DisableBuildWarnings = true, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
-
+   DisableBuildWarnings = true,
    ConfigurationSaving = {
-      Enabled = false,
-      FolderName = nil, -- Create a custom folder for your hub/game
+      Enabled = false, 
       FileName = "ZBOT"
    },
-
    Discord = {
-      Enabled = false, -- Prompt the user to join your Discord server if their executor supports it
-      Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ABCD would be ABCD
-      RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+      Enabled = false, 
+      Invite = "noinvitelink", 
+      RememberJoins = true
    },
-
-   KeySystem = false, -- Set this to true to use our key system
-   KeySettings = {
-      Title = "ZBOT",
-      Subtitle = "Key System",
-      Note = "No method of obtaining the key is provided", -- Use this to tell the user how to get a key
-      FileName = "Key", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
-      SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
-      GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
-      Key = {"Hello"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
-   }
+   KeySystem = false,
 })
 
-local Movement = Window:CreateTab("Movement", 4483362458) -- Title, Image
+-- Helper function to safely access the player's humanoid
+local function getHumanoid()
+   local character = game.Players.LocalPlayer.Character
+   return character and character:FindFirstChild("Humanoid")
+end
+
+-- Create a Slider with default settings
+local function createSlider(tab, name, range, increment, suffix, defaultValue, flag, callback)
+   return tab:CreateSlider({
+      Name = name,
+      Range = range,
+      Increment = increment,
+      Suffix = suffix,
+      CurrentValue = defaultValue,
+      Flag = flag,
+      Callback = callback
+   })
+end
+
+-- Create a Button with a callback function
+local function createButton(tab, name, callback)
+   return tab:CreateButton({
+      Name = name,
+      Callback = callback
+   })
+end
+
+-- Movement Tab
+local Movement = Window:CreateTab("Movement", 4483362458)
 local Section = Movement:CreateSection("Movement")
 
-local Slider = Movement:CreateSlider({
-   Name = "Walk Speed",
-   Range = {16, 500},
-   Increment = 1,
-   Suffix = "Walk Speed",
-   CurrentValue = 16,
-   Flag = "WalkSpeed", 
-   Callback = function(Value)
-      game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
-   end,
-})
+-- Walk Speed Slider
+createSlider(Movement, "Walk Speed", {16, 500}, 1, "Walk Speed", 16, "WalkSpeed", function(Value)
+   local humanoid = getHumanoid()
+   if humanoid then
+      humanoid.WalkSpeed = Value
+   end
+end)
 
-local Slider = Movement:CreateSlider({
-   Name = "Jump Power",
-   Range = {50, 200},  -- You can adjust the range as per your preference
-   Increment = 1,
-   Suffix = "Jump Power",
-   CurrentValue = 50,
-   Flag = "JumpPower", 
-   Callback = function(Value)
-      game.Players.LocalPlayer.Character.Humanoid.JumpPower = Value
-   end,
-})
+-- Jump Power Slider
+createSlider(Movement, "Jump Power", {50, 200}, 1, "Jump Power", 50, "JumpPower", function(Value)
+   local humanoid = getHumanoid()
+   if humanoid then
+      humanoid.JumpPower = Value
+   end
+end)
 
-local Slider = Movement:CreateSlider({
-   Name = "Gravity",
-   Range = {0, 200},
-   Increment = 1,
-   Suffix = "Gravity",
-   CurrentValue = 196.2,  -- Roblox default gravity
-   Flag = "Gravity", 
-   Callback = function(Value)
-      workspace.Gravity = Value
-   end,
-})
+-- Gravity Slider
+createSlider(Movement, "Gravity", {0, 200}, 1, "Gravity", 196.2, "Gravity", function(Value)
+   workspace.Gravity = Value
+end)
 
-local Scripts = Window:CreateTab("Scripts", 4483362458) -- Title, Image
+-- Scripts Tab
+local Scripts = Window:CreateTab("Scripts", 4483362458)
 local Section = Scripts:CreateSection("Scripts")
 
-local Button = Scripts:CreateButton({
-   Name = "Simple Spy (Mobile Support)",
-   Callback = function()
+-- Simple Spy Button
+createButton(Scripts, "Simple Spy (Mobile Support)", function()
    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Simple-Spy-Mobile-Script-Restored-22732"))()
-   end,
-})
+end)
 
-local Visual = Window:CreateTab("Visual", 4483362458) -- Title, Image
+-- Visual Tab
+local Visual = Window:CreateTab("Visual", 4483362458)
 local Section = Visual:CreateSection("Visual")
 
-local Slider = Visual:CreateSlider({
-   Name = "FOV",
-   Range = {70, 90000},
-   Increment = 1,
-   Suffix = "Field of View",
-   CurrentValue = 70,
-   Flag = "FOV", 
-   Callback = function(Value)
-      game:GetService("Workspace").CurrentCamera.FieldOfView = Value
-   end,
-})
+-- FOV Slider
+createSlider(Visual, "FOV", {70, 500}, 1, "Field of View", 70, "FOV", function(Value)
+   game:GetService("Workspace").CurrentCamera.FieldOfView = Value
+end)
 
-local Toggle = Visual:CreateToggle({
-   Name = "Name Esp",
-   CurrentValue = false,
-   Flag = "Name", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-   Callback = function(Value)
-      Sense.teamSettings.enemy.name = Value  -- Use the 'Value' passed to the callback
-      Sense.teamSettings.friendly.name = Value  -- Use the 'Value' passed to the callback
-   end,
-})
+-- ESP Settings (Shared Function for Enemy and Friendly ESP)
+local function configureESP(isEnemy)
+   local Sense = loadstring(game:HttpGet('https://sirius.menu/sense'))()
+   
+   local target = isEnemy and Sense.teamSettings.enemy or Sense.teamSettings.friendly
+   target.enabled = true
+   target.box = false
+   target.boxOutline = true
+   target.healthBar = true
+   target.name = true
+   target.boxFill = false
+   target.distance = true
+   target.chams = true
 
-local Button = Visual:CreateButton({
-   Name = "Enemy Esp",
-   Callback = function()
-      local Sense = loadstring(game:HttpGet('https://sirius.menu/sense'))()
+   Sense.Load()
+end
 
-      Sense.teamSettings.enemy.enabled = true
-      Sense.teamSettings.enemy.box = false  -- Remove the 2D box
-      Sense.teamSettings.enemy.boxOutline = true  -- Enable the box outline
-      Sense.teamSettings.enemy.healthBar = true
-      Sense.teamSettings.enemy.name = false
-      Sense.teamSettings.enemy.boxFill = false
-      Sense.teamSettings.enemy.distance = false
-      Sense.teamSettings.enemy.chams = true  -- Enable chams
+-- Enemy ESP Button
+createButton(Visual, "Enemy ESP", function()
+   configureESP(true)
+end)
 
-      Sense.Load()
-   end,
-})
+-- Friendly ESP Button
+createButton(Visual, "Friendly ESP", function()
+   configureESP(false)
+end)
 
-local Button = Visual:CreateButton({
-   Name = "Friendly Esp",
-   Callback = function()
-      local Sense = loadstring(game:HttpGet('https://sirius.menu/sense'))()
-
-      Sense.teamSettings.friendly.enabled = true
-      Sense.teamSettings.friendly.box = false  -- Remove the 2D box
-      Sense.teamSettings.friendly.boxOutline = true  -- Enable the box outline
-      Sense.teamSettings.friendly.healthBar = true
-      Sense.teamSettings.friendly.name = true
-      Sense.teamSettings.friendly.boxFill = false
-      Sense.teamSettings.friendly.distance = false
-      Sense.teamSettings.friendly.chams = true  -- Enable chams
-      
-      Sense.Load()
-   end,
-})
-
-local Info = Window:CreateTab("Info", 4483362458) -- Title, Image
+-- Info Tab
+local Info = Window:CreateTab("Info", 4483362458)
 local Section = Info:CreateSection("Info")
-local Paragraph = Info:CreateParagraph({Title = "ZBOT v1.0.2", Content = "Bug fixes and ESP"})
-local Section = Info:CreateSection("Info")
-local Paragraph = Info:CreateParagraph({Title = "ZBOT v1.0.1", Content = "Bug fixes and ui changes"})
-local Divider = Info:CreateDivider()
-local Paragraph = Info:CreateParagraph({Title = "ZBOT v1.0.0", Content = "Release and added the tabs Movement, Scripts, and Visual"})
 
+-- Version Information
+Info:CreateParagraph({Title = "ZBOT v1.0.2", Content = "Bug fixes and ESP improvements"})
+Info:CreateParagraph({Title = "ZBOT v1.0.1", Content = "Bug fixes and UI changes"})
+Info:CreateParagraph({Title = "ZBOT v1.0.0", Content = "Initial release with Movement, Scripts, and Visual tabs"})
+Info:CreateDivider()
+
+-- Load Configuration (if needed)
 Rayfield:LoadConfiguration()
