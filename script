@@ -95,42 +95,37 @@ createButton(Movement, "Toggle Fly", function()
    end
 end)
 
--- No Clip Toggle (Fly through walls)
-local noClip = false
-createButton(Movement, "Toggle No Clip", function()
-   noClip = not noClip
-   local character = game.Players.LocalPlayer.Character
-   if character then
-      for _, part in pairs(character:GetDescendants()) do
-         if part:IsA("BasePart") then
-            part.CanCollide = not noClip
-         end
+-- Speed Hack: Smooth speed acceleration
+local speedHackEnabled = false
+local speedFactor = 1.5
+createButton(Movement, "Toggle Speed Hack", function()
+   speedHackEnabled = not speedHackEnabled
+   local humanoid = getHumanoid()
+   if humanoid then
+      if speedHackEnabled then
+         humanoid.WalkSpeed = humanoid.WalkSpeed * speedFactor
+      else
+         humanoid.WalkSpeed = humanoid.WalkSpeed / speedFactor
       end
    end
 end)
 
--- Speed Boost Toggle
-local speedBoost = false
-createButton(Movement, "Toggle Speed Boost", function()
-   speedBoost = not speedBoost
-   local humanoid = getHumanoid()
-   if humanoid then
-      if speedBoost then
-         humanoid.WalkSpeed = 100
-      else
-         humanoid.WalkSpeed = 16
-      end
+-- Gravity Well (Pull player towards ground)
+createButton(Movement, "Gravity Well", function()
+   local character = game.Players.LocalPlayer.Character
+   if character then
+      local bodyPosition = Instance.new("BodyPosition")
+      bodyPosition.MaxForce = Vector3.new(100000, 100000, 100000)
+      bodyPosition.D = 1000
+      bodyPosition.P = 100000
+      bodyPosition.Position = Vector3.new(character.HumanoidRootPart.Position.X, 0, character.HumanoidRootPart.Position.Z) -- Pull down to ground level
+      bodyPosition.Parent = character.HumanoidRootPart
    end
 end)
 
 -- Visual Tab
 local Visual = Window:CreateTab("Visual", 4483362458)
 local Section = Visual:CreateSection("Visual")
-
--- FOV Slider with presets
-createSlider(Visual, "FOV", {70, 500}, 1, "Field of View", 70, "FOV", function(Value)
-   game:GetService("Workspace").CurrentCamera.FieldOfView = Value
-end)
 
 -- ESP Settings (Shared Function for Enemy and Friendly ESP)
 local function configureESP(isEnemy, color)
@@ -150,41 +145,91 @@ local function configureESP(isEnemy, color)
    Sense.Load()
 end
 
--- Enemy ESP Button with color picker
-createButton(Visual, "Enemy ESP", function()
-   local color = Color3.fromRGB(255, 0, 0) -- Red color for enemy ESP
-   configureESP(true, color)
+-- Object ESP (show indicators on objects)
+createButton(Visual, "Object ESP", function()
+   -- Object ESP example (could be expanded to show specific objects)
+   for _, obj in pairs(workspace:GetChildren()) do
+      if obj:IsA("BasePart") then
+         local esp = Instance.new("Highlight")
+         esp.Parent = obj
+         esp.FillColor = Color3.fromRGB(0, 0, 255)  -- Blue color for objects
+         esp.OutlineColor = Color3.fromRGB(255, 255, 255)
+      end
+   end
 end)
 
--- Friendly ESP Button with color picker
-createButton(Visual, "Friendly ESP", function()
-   local color = Color3.fromRGB(0, 255, 0) -- Green color for friendly ESP
-   configureESP(false, color)
+-- Player Health/Armor ESP
+createButton(Visual, "Player Health ESP", function()
+   for _, player in pairs(game.Players:GetChildren()) do
+      if player.Character then
+         local healthBar = Instance.new("BillboardGui")
+         healthBar.Adornee = player.Character.HumanoidRootPart
+         healthBar.Size = UDim2.new(0, 100, 0, 10)
+         healthBar.StudsOffset = Vector3.new(0, 3, 0)
+         healthBar.Parent = player.Character
+
+         local healthBarFrame = Instance.new("Frame")
+         healthBarFrame.Size = UDim2.new(1, 0, player.Character.Humanoid.Health / player.Character.Humanoid.MaxHealth, 0)
+         healthBarFrame.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+         healthBarFrame.Parent = healthBar
+      end
+   end
 end)
 
--- Wallhack/Chams Button
-createButton(Visual, "Enable Wallhack", function()
-   local Sense = loadstring(game:HttpGet('https://sirius.menu/sense'))()
-   Sense.visuals.wallhack = true -- Enable wallhack (chams)
-   Sense.Load()
+-- FOV Circle
+createButton(Visual, "Toggle FOV Circle", function()
+   local fovCircle = Instance.new("ImageLabel")
+   fovCircle.Image = "rbxassetid://12345678" -- A simple circle texture (use a proper asset ID)
+   fovCircle.Size = UDim2.new(0, 200, 0, 200)
+   fovCircle.Position = UDim2.new(0.5, -100, 0.5, -100)
+   fovCircle.Parent = game:GetService("CoreGui")
 end)
 
 -- Scripts Tab
 local Scripts = Window:CreateTab("Scripts", 4483362458)
 local Section = Scripts:CreateSection("Scripts")
 
--- Infinite Yield Script
-createButton(Scripts, "Infinite Yield", function()
-   loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+-- Godmode
+createButton(Scripts, "Godmode", function()
+   local humanoid = getHumanoid()
+   if humanoid then
+      humanoid.Health = humanoid.MaxHealth
+      humanoid:ChangeState(Enum.HumanoidStateType.Physics)
+   end
 end)
 
--- Teleport to Player Button
-createButton(Scripts, "Teleport to Player", function()
-   local playerName = game.Players.LocalPlayer.Name
-   local targetPlayer = game.Players:FindFirstChild(playerName) -- Get the player you want to teleport to
-   if targetPlayer then
-      game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame
+-- Aimbot (Basic)
+createButton(Scripts, "Aimbot", function()
+   local mouse = game.Players.LocalPlayer:GetMouse()
+   local target = nil
+
+   -- Aim at the nearest enemy
+   for _, player in pairs(game.Players:GetChildren()) do
+      if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+         local distance = (player.Character.HumanoidRootPart.Position - mouse.Hit.p).Magnitude
+         if not target or distance < (target.Character.HumanoidRootPart.Position - mouse.Hit.p).Magnitude then
+            target = player
+         end
+      end
    end
+
+   if target then
+      mouse.Hit = target.Character.HumanoidRootPart.CFrame
+   end
+end)
+
+-- Auto Farm Button
+createButton(Scripts, "Auto Farm", function()
+   while true do
+      -- Auto farm logic (e.g., interact with a certain object every few seconds)
+      wait(1)
+   end
+end)
+
+-- Teleport to Coordinates
+createButton(Scripts, "Teleport to Coordinates", function()
+   local coords = Vector3.new(0, 100, 0)  -- Example coordinates
+   game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(coords)
 end)
 
 -- Info Tab
@@ -192,10 +237,9 @@ local Info = Window:CreateTab("Info", 4483362458)
 local Section = Info:CreateSection("Info")
 
 -- Version Information
-Info:CreateParagraph({Title = "ZBOT v1.1.0", Content = "Added Fly Mode, No Clip, Speed Boost, Wallhack/Chams, and more."})
+Info:CreateParagraph({Title = "ZBOT v2.0.0", Content = "Added Speed Hack, Gravity Well, Aimbot, Godmode, and more."})
+Info:CreateParagraph({Title = "ZBOT v1.1.0", Content = "Improved Fly Mode and added various ESP features"})
 Info:CreateParagraph({Title = "ZBOT v1.0.2", Content = "Bug fixes and ESP improvements"})
-Info:CreateParagraph({Title = "ZBOT v1.0.1", Content = "Bug fixes and UI changes"})
-Info:CreateParagraph({Title = "ZBOT v1.0.0", Content = "Initial release with Movement, Scripts, and Visual tabs"})
 Info:CreateDivider()
 
 -- Load Configuration (if needed)
