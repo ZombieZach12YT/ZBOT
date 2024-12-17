@@ -82,15 +82,101 @@ local Slider = Movement:CreateSlider({
 local Settings = Window:CreateTab("Settings", 11293977610) -- Title, Image
 local Section = Settings:CreateSection("Settings")
 
-local ColorPicker = Settings:CreateColorPicker({
-   Name = "Color Picker",
-   Color = Color3.fromRGB(255, 255, 255),
-   Flag = "ColorPicker1", -- A flag is the identifier for the configuration file
+local lightMode = {
+   TextColor = Color3.fromRGB(0, 0, 0), -- Black text
+   Background = Color3.fromRGB(255, 255, 255), -- White background
+   Topbar = Color3.fromRGB(240, 240, 240),
+   Shadow = Color3.fromRGB(200, 200, 200),
+   NotificationBackground = Color3.fromRGB(255, 255, 255),
+   NotificationActionsBackground = Color3.fromRGB(200, 200, 200),
+   TabBackground = Color3.fromRGB(230, 230, 230),
+   TabStroke = Color3.fromRGB(180, 180, 180),
+   TabBackgroundSelected = Color3.fromRGB(180, 180, 180),
+   TabTextColor = Color3.fromRGB(0, 0, 0),
+   SelectedTabTextColor = Color3.fromRGB(50, 50, 50),
+   ElementBackground = Color3.fromRGB(240, 240, 240),
+   ElementBackgroundHover = Color3.fromRGB(220, 220, 220),
+   SecondaryElementBackground = Color3.fromRGB(255, 255, 255),
+   ElementStroke = Color3.fromRGB(150, 150, 150),
+   SecondaryElementStroke = Color3.fromRGB(180, 180, 180),
+   SliderBackground = Color3.fromRGB(50, 138, 220),
+   SliderProgress = Color3.fromRGB(50, 138, 220),
+   SliderStroke = Color3.fromRGB(58, 163, 255),
+   ToggleBackground = Color3.fromRGB(240, 240, 240),
+   ToggleEnabled = Color3.fromRGB(0, 146, 214),
+   ToggleDisabled = Color3.fromRGB(150, 150, 150),
+   ToggleEnabledStroke = Color3.fromRGB(0, 170, 255),
+   ToggleDisabledStroke = Color3.fromRGB(200, 200, 200),
+   ToggleEnabledOuterStroke = Color3.fromRGB(200, 200, 200),
+   ToggleDisabledOuterStroke = Color3.fromRGB(180, 180, 180),
+   DropdownSelected = Color3.fromRGB(200, 200, 200),
+   DropdownUnselected = Color3.fromRGB(240, 240, 240),
+   InputBackground = Color3.fromRGB(255, 255, 255),
+   InputStroke = Color3.fromRGB(180, 180, 180),
+   PlaceholderColor = Color3.fromRGB(100, 100, 100)
+}
+
+local darkMode = {
+   TextColor = Color3.fromRGB(240, 240, 240),
+   Background = Color3.fromRGB(25, 25, 25),
+   Topbar = Color3.fromRGB(34, 34, 34),
+   Shadow = Color3.fromRGB(20, 20, 20),
+   NotificationBackground = Color3.fromRGB(20, 20, 20),
+   NotificationActionsBackground = Color3.fromRGB(230, 230, 230),
+   TabBackground = Color3.fromRGB(80, 80, 80),
+   TabStroke = Color3.fromRGB(85, 85, 85),
+   TabBackgroundSelected = Color3.fromRGB(210, 210, 210),
+   TabTextColor = Color3.fromRGB(240, 240, 240),
+   SelectedTabTextColor = Color3.fromRGB(50, 50, 50),
+   ElementBackground = Color3.fromRGB(35, 35, 35),
+   ElementBackgroundHover = Color3.fromRGB(40, 40, 40),
+   SecondaryElementBackground = Color3.fromRGB(25, 25, 25),
+   ElementStroke = Color3.fromRGB(50, 50, 50),
+   SecondaryElementStroke = Color3.fromRGB(40, 40, 40),
+   SliderBackground = Color3.fromRGB(50, 138, 220),
+   SliderProgress = Color3.fromRGB(50, 138, 220),
+   SliderStroke = Color3.fromRGB(58, 163, 255),
+   ToggleBackground = Color3.fromRGB(30, 30, 30),
+   ToggleEnabled = Color3.fromRGB(0, 146, 214),
+   ToggleDisabled = Color3.fromRGB(100, 100, 100),
+   ToggleEnabledStroke = Color3.fromRGB(0, 170, 255),
+   ToggleDisabledStroke = Color3.fromRGB(125, 125, 125),
+   ToggleEnabledOuterStroke = Color3.fromRGB(100, 100, 100),
+   ToggleDisabledOuterStroke = Color3.fromRGB(65, 65, 65),
+   DropdownSelected = Color3.fromRGB(40, 40, 40),
+   DropdownUnselected = Color3.fromRGB(30, 30, 30),
+   InputBackground = Color3.fromRGB(30, 30, 30),
+   InputStroke = Color3.fromRGB(65, 65, 65),
+   PlaceholderColor = Color3.fromRGB(178, 178, 178)
+}
+
+local currentMode = darkMode  -- Default to dark mode
+
+local Toggle = Settings:CreateToggle({
+   Name = "Light/Dark Mode",
+   CurrentValue = false,
+   Flag = "ModeToggle", -- Identifier for the configuration
    Callback = function(Value)
-       -- Assuming 'Background' is a Frame or other UI element you want to update
-       Background.BackgroundColor3 = Value
-   end
+       if Value then
+           -- Switch to light mode
+           currentMode = lightMode
+       else
+           -- Switch to dark mode
+           currentMode = darkMode
+       end
+       
+       -- Apply the current mode's colors to the UI elements
+       -- Example: Apply the background color
+       game:GetService("TweenService"):Create(
+           game:GetService("Workspace").CurrentCamera,
+           TweenInfo.new(0.5),
+           { BackgroundColor = currentMode.Background }
+       ):Play()
+
+       -- Similarly, apply other UI elements' colors based on `currentMode`
+       -- You can continue applying colors like `currentMode.TextColor`, `currentMode.ToggleBackground`, etc.
+   end,
 })
-Background.BackgroundColor3 = Color3.fromRGB(255, 255, 255)  -- Initial color
+
 
 Rayfield:LoadConfiguration()
