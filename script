@@ -148,4 +148,73 @@ while true do
     wait(0.1)  -- Update at a quicker interval (for real-time tracking)
 end
 
+local StatusUI = nil
+
+-- Create the new toggle to show the settings status
+local StatusToggle = Settings:CreateToggle({
+    Name = "Show Settings Status", -- Name of the toggle button
+    CurrentValue = false,          -- Default state: Hidden
+    Flag = "ShowSettingsStatus",   -- A flag for the identifier of the toggle
+    Callback = function(Value)
+        if Value then
+            -- Show the settings status UI
+            StatusUI.Visible = true
+        else
+            -- Hide the settings status UI
+            StatusUI.Visible = false
+        end
+    end,
+})
+
+-- Create a ScreenGui for the settings status UI
+local statusGui = Instance.new("ScreenGui")
+statusGui.Name = "SettingsStatusUI"
+statusGui.Parent = player:WaitForChild("PlayerGui")
+
+-- Create a frame to hold the status UI
+StatusUI = Instance.new("Frame")
+StatusUI.Name = "StatusFrame"
+StatusUI.Size = UDim2.new(0, 250, 0, 180)
+StatusUI.Position = UDim2.new(0, 550, 0, 10) -- Position on the right side
+StatusUI.BackgroundTransparency = 0.3
+StatusUI.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+StatusUI.Visible = false  -- Initially hidden
+StatusUI.Parent = statusGui
+
+-- Apply rounded corners to the status frame
+local uiCornerStatus = Instance.new("UICorner")
+uiCornerStatus.CornerRadius = UDim.new(0, 10)  -- Adjust corner radius
+uiCornerStatus.Parent = StatusUI
+
+-- Create a TextLabel to display the current settings status
+local statusLabel = Instance.new("TextLabel")
+statusLabel.Position = UDim2.new(0, 10, 0, 10)
+statusLabel.Size = UDim2.new(0, 230, 0, 160)
+statusLabel.BackgroundTransparency = 1
+statusLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+statusLabel.Font = Enum.Font.SourceSans
+statusLabel.TextSize = 18
+statusLabel.Text = "Settings Status:\nLoading..."
+statusLabel.TextWrapped = true
+statusLabel.Parent = StatusUI
+
+-- Function to update the status UI
+local function updateStatus()
+    local walkSpeedValue = game.Players.LocalPlayer.Character:WaitForChild("Humanoid").WalkSpeed
+    local jumpPowerValue = game.Players.LocalPlayer.Character:WaitForChild("Humanoid").JumpPower
+    local hudVisibility = hudFrame.Visible
+    local hudStatus = hudVisibility and "Visible" or "Hidden"
+    
+    statusLabel.Text = string.format("Settings Status:\n\nWalk Speed: %.2f\nJump Power: %.2f\nHUD: %s", 
+                                      walkSpeedValue, jumpPowerValue, hudStatus)
+end
+
+-- Update the status every 0.5 seconds
+while true do
+    if StatusUI.Visible then
+        updateStatus()
+    end
+    wait(0.5)  -- Update at a regular interval
+end
+
 Rayfield:LoadConfiguration()
