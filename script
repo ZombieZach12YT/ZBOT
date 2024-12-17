@@ -2,7 +2,7 @@ local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
     Name = "Zbot",
-    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
+    Icon = 11419664015, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
     LoadingTitle = "Zbot",
     LoadingSubtitle = "by ZBOT",
     Theme = "Default", -- Check https://docs.sirius.menu/rayfield/configuration/themes
@@ -12,8 +12,8 @@ local Window = Rayfield:CreateWindow({
  
     ConfigurationSaving = {
        Enabled = true,
-       FolderName = nil, -- Create a custom folder for your hub/game
-       FileName = "Big Hub"
+       FolderName = zbot, -- Create a custom folder for your hub/game
+       FileName = "Zbot Config"
     },
  
     Discord = {
@@ -34,18 +34,16 @@ local Window = Rayfield:CreateWindow({
     }
  })
 
-local Movement = Window:CreateTab("Movement", 4483362458) -- Title, Image
+local Movement = Window:CreateTab("Movement", 12975608939) -- Title, Image
 local Section = Movement:CreateSection("Movement")
-
-local Divider = Movement:CreateDivider()
 
 -- Create Walk Speed Slider
 local Slider = Movement:CreateSlider({
    Name = "Walk Speed", -- Displayed name for the slider
-   Range = {0, 100}, -- Walk speed range from 0 to 100
-   Increment = 10, -- Increment value for each adjustment
+   Range = {0, 500}, -- Walk speed range from 0 to 100
+   Increment = 1, -- Increment value for each adjustment
    Suffix = "Walk Speed", -- Text that appears after the value
-   CurrentValue = 10, -- Default value for the walk speed
+   CurrentValue = 16, -- Default value for the walk speed
    Flag = "Walk Speed", -- Configuration flag for saving the value
    Callback = function(Value)
        -- Function that executes when the slider value is changed
@@ -59,5 +57,40 @@ local Slider = Movement:CreateSlider({
        humanoid.WalkSpeed = Value
    end,
 })
+
+-- Create Jump Power Slider
+local Slider = Movement:CreateSlider({
+   Name = "Jump Power", -- Displayed name for the slider
+   Range = {50, 500}, -- Jump power range from 50 to 500
+   Increment = 1, -- Increment value for each adjustment
+   Suffix = "Jump Power", -- Text that appears after the value
+   CurrentValue = 50, -- Default value for the jump power
+   Flag = "Jump Power", -- Configuration flag for saving the value
+   Callback = function(Value)
+       -- Function that executes when the slider value is changed
+       
+       -- Ensure the player has a character and humanoid object
+       local player = game.Players.LocalPlayer
+       local character = player.Character or player.CharacterAdded:Wait()
+       local humanoid = character:WaitForChild("Humanoid")
+
+       -- Set the player's jump power to the selected slider value
+       humanoid.JumpPower = Value
+   end,
+})
+
+local Settings = Window:CreateTab("Settings", 11293977610) -- Title, Image
+local Section = Settings:CreateSection("Settings")
+
+local ColorPicker = Settings:CreateColorPicker({
+   Name = "Color Picker",
+   Color = Color3.fromRGB(255, 255, 255),
+   Flag = "ColorPicker1", -- A flag is the identifier for the configuration file
+   Callback = function(Value)
+       -- Assuming 'Background' is a Frame or other UI element you want to update
+       Background.BackgroundColor3 = Value
+   end
+})
+Background.BackgroundColor3 = Color3.fromRGB(255, 255, 255)  -- Initial color
 
 Rayfield:LoadConfiguration()
